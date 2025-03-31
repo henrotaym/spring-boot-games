@@ -1,0 +1,53 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - UID=${UID}
+        - GID=${GID}
+        - APP_PORT=${APP_PORT}
+    command: /bin/sh -c "while sleep 1000; do :; done"
+    ports:
+      - "${APP_PORT_FORWARD}:${APP_PORT}"
+    env_file:
+      - .env
+    volumes:
+      - ./:/opt/apps/app
+    networks:
+      - app
+      - accessible
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.games.rule=Host(`games.henrotaym.ip-ddns.com`)
+      - traefik.http.routers.games.tls=true
+  database:
+    image: "mysql/mysql-server:8.0"
+    ports:
+      - "${DB_PORT_FORWARD}:${DB_PORT}"
+    environment:
+      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD_ROOT}"
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_DATABASE: "${DB_DATABASE}"
+      MYSQL_USER: "${DB_USERNAME}"
+      MYSQL_PASSWORD: "${DB_PASSWORD}"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}"]
+      retries: 3
+      timeout: 5s
+    restart: unless-stopped
+networks:
+  app:
+    driver: bridge
+  accessible:
+    external: true
+volumes:
+  mysql_data:
+    driver: local
+  mvn_deps:
+    driver: local
+  
