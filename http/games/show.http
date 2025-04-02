@@ -1,0 +1,2 @@
+GET http://app:8080/api/games/1
+Content-Type: application/json

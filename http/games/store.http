@@ -1,0 +1,6 @@
+POST http://app:8080/api/games
+Content-Type: application/json
+
+{
+    "name": "test"
+}
