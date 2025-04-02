@@ -1,6 +1,6 @@
-PUT http://app:8080/api/games/1
+PUT http://app:8080/api/games/12
 Content-Type: application/json
 
 {
-    "name": "test2"
+    "name": "updated"
 }
