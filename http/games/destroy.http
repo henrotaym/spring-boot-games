@@ -1,2 +1,2 @@
-DELETE http://app:8080/api/games/1
+DELETE http://app:8080/api/games/3
 Content-Type: application/json

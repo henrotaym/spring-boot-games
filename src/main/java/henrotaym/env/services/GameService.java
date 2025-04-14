@@ -1,6 +1,7 @@
 package henrotaym.env.services;
 
 import java.math.BigInteger;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -9,6 +10,7 @@ import henrotaym.env.http.requests.GameRequest;
 import henrotaym.env.http.resources.GameResource;
 import henrotaym.env.mappers.GameMapper;
 import henrotaym.env.repositories.GameRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -27,13 +29,36 @@ public class GameService {
     }
 
     public GameResource update(BigInteger id, GameRequest request) {
-        Game game = this.gameRepository.findById(id)
-            .orElseThrow();
+        Game game = this.findById(id);
 
         game = this.gameRepository.save(
             this.gameMapper.request(request, game)
         );
 
         return this.gameMapper.resource(game);
+    }
+
+    public GameResource show(BigInteger id) {
+        Game game = this.findById(id);
+
+        return this.gameMapper.resource(game);
+    }
+
+    public List<GameResource> index() {
+        return this.gameRepository.findAll()
+            .stream()
+            .map(game -> this.gameMapper.resource(game))
+            .toList();
+    }
+
+    public void destroy(BigInteger id) {
+        Game game = this.findById(id);
+
+        this.gameRepository.delete(game);
+    }
+
+    private Game findById(BigInteger id) {
+        return this.gameRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Game not found."));
     }
 }

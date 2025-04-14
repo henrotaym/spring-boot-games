@@ -3,6 +3,8 @@ package henrotaym.env.http.controllers;
 import java.math.BigInteger;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,31 +29,38 @@ public class GameController {
     private GameService gameService;
     
     @PostMapping("")
-    public GameResource store(@RequestBody @Valid GameRequest request) {
-        return this.gameService.store(request);
+    public ResponseEntity<GameResource> store(@RequestBody @Valid GameRequest request) {
+        GameResource game = this.gameService.store(request);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(game);
     }
 
     @GetMapping("{id}")
-    public Game show(@PathVariable BigInteger id) {
-        return this.repository.findById(id)
-            .orElseThrow();
+    public ResponseEntity<GameResource> show(@PathVariable BigInteger id) {
+        GameResource game = this.gameService.show(id);
+
+        return ResponseEntity.ok(game);
     }
 
     @PutMapping("{id}")
-    public GameResource update(@PathVariable BigInteger id, @RequestBody @Valid GameRequest request) {
-        return this.gameService.update(id, request);
+    public ResponseEntity<GameResource> update(@PathVariable BigInteger id, @RequestBody @Valid GameRequest request) {
+        GameResource game = this.gameService.update(id, request);
+
+        return ResponseEntity.ok(game);
     }
 
     @DeleteMapping("{id}")
-    public void destroy(@PathVariable BigInteger id) {
-        Game game = this.repository.findById(id)
-            .orElseThrow();
+    public ResponseEntity<Object> destroy(@PathVariable BigInteger id) {
+        this.gameService.destroy(id);
 
-        this.repository.delete(game);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("")
-    public List<Game> index() {
-        return this.repository.findAll();
+    public ResponseEntity<List<GameResource>> index() {
+        List<GameResource> games = this.gameService.index();
+
+        return ResponseEntity.ok(games);
     }
 }
