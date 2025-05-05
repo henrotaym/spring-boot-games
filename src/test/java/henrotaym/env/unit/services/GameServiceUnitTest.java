@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigInteger;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
@@ -40,6 +41,35 @@ public class GameServiceUnitTest {
         verify(gameMapper).resource(game);
 
         assertEquals(request.name(), actualGameResource.name());
+        assertEquals(gameResource.name(), actualGameResource.name());
+        assertEquals(gameResource.id(), actualGameResource.id());
+    }
+
+    @Test
+    public void it_updates_a_game_based_on_incoming_request(){
+        BigInteger bigInt = BigInteger.valueOf(1);
+        GameRequest request = new GameRequest(":name2");
+
+        GameRepository gameRepository = mock(GameRepository.class);
+        GameMapper gameMapper = mock(GameMapper.class);
+        GameService gameService = new GameService(gameRepository, gameMapper);
+
+        Game existingGame = new Game(bigInt, ":name");
+        Game updatedGame = new Game(bigInt, ":name2");
+        GameResource gameResource = new GameResource(bigInt, ":name3");
+
+        when(gameRepository.findById(bigInt)).thenReturn(Optional.of(existingGame));
+        when(gameMapper.request(request, existingGame)).thenReturn(existingGame);
+        when(gameRepository.save(existingGame)).thenReturn(updatedGame);
+        when(gameMapper.resource(updatedGame)).thenReturn(gameResource);
+
+        GameResource actualGameResource = gameService.update(bigInt, request);
+
+        verify(gameRepository).findById(bigInt);
+        verify(gameMapper).request(request, existingGame);
+        verify(gameRepository).save(existingGame);
+        verify(gameMapper).resource(updatedGame);
+
         assertEquals(gameResource.name(), actualGameResource.name());
         assertEquals(gameResource.id(), actualGameResource.id());
     }
