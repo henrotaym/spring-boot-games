@@ -43,7 +43,7 @@ public class GameFactoryFeatureTest extends ApplicationTest {
 
   @Test
   public void it_creates_a_game_with_provided_data() {
-    String name = "name";
+    String name = ":name";
     Game game = this.gameFactory.create(g -> g.setName(name));
     assertEquals(name, game.getName());
     assertNotNull(game.getId());
