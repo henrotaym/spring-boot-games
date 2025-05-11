@@ -14,6 +14,8 @@ services:
       - .env
     volumes:
       - ./:/opt/apps/app
+      # - ${HOME}/.gitconfig:/home/${UID}/.gitconfig:ro
+      # - ${USERPROFILE}/.gitconfig:/home/${UID}/.gitconfig:ro
     networks:
       - app
       - accessible
