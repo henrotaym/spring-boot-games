@@ -30,6 +30,7 @@
         }
     },
     "remoteEnv": {
-        "SSH_AUTH_SOCK": "/ssh-agent"
+        "SSH_AUTH_SOCK": "/ssh-agent",
+        "GIT_CREDENTIAL_HELPER": "store"
     }
 }

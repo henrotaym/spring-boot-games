@@ -59,7 +59,9 @@ RUN npm install -g gitmoji-cli lefthook
 RUN if ! getent group ${GID} > /dev/null; then \
     groupadd -g ${GID} app; fi && \
     if ! getent passwd ${UID} > /dev/null; then \
-    useradd -u ${UID} -g ${GID} -m -s /bin/bash app; fi
+    useradd -u ${UID} -g ${GID} -m -s /bin/bash app; fi && \
+    userName=$(getent passwd $UID | cut -d: -f1) && \
+    ln -s /home/$userName /home/current
 
 # Use host user
 USER ${UID}:${GID}
