@@ -12,11 +12,11 @@ services:
       - "${APP_PORT_FORWARD}:${APP_PORT}"
     volumes:
       - ./:/opt/apps/app
-      # - ${SSH_AUTH_SOCK}:/ssh-agent:ro
+      - ${SSH_AUTH_SOCK}:/ssh-agent:ro
     env_file:
       - .env
-    # environment:
-    #   - SSHS_AUTH_SOCK=/ssh-agent
+    environment:
+      - SSH_AUTH_SOCK=/ssh-agent
     networks:
       - app
       - accessible

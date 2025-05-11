@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 public class GameMapperUnitTest {
   @Test
-  void it_transforms_game_to_a_game_resource() {
+  void it_transforms_a_game_to_a_game_resource() {
     GameMapper gameMapper = new GameMapper();
     Game game = new Game(new BigInteger("1"), ":test");
 

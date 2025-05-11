@@ -16,7 +16,9 @@ ARG APP_PORT=8080
 
 # Install dependencies
 RUN apt-get update && \
-    apt-get install -y wget git
+    apt-get install -y wget git nano
+
+ENV GIT_EDITOR nano
 
 # Download java binaries
 RUN arch=$(echo ${TARGETPLATFORM} | sed 's/.*\///') && \
@@ -39,7 +41,7 @@ RUN wget --output-document=/tmp/maven.tar.gz https://downloads.apache.org/maven/
 
 # Make maven binaries globally available
 ENV MAVEN_HOME="/usr/local/apache-maven-${MAVEN_VERSION}"
-ENV MAVEN_OPTS="-Dmaven.repo.local=/opt/apps/app/.m2"
+ENV MAVEN_OPTS="-Dmaven.repo.local=./.m2"
 ENV PATH="$MAVEN_HOME/bin:${PATH}"
 
 # Install google java formatter
@@ -64,6 +66,13 @@ USER ${UID}:${GID}
 
 # Set working directory
 WORKDIR /opt/apps/app
+
+# Configure gitmoji & lefthook
+COPY --chown=${UID}:${GID} ./.git ./.git
+COPY --chown=${UID}:${GID} ./lefthook.yml .
+
+RUN gitmoji --init && \
+    lefthook install
 
 # Copy sourcecode
 COPY --chown=${UID}:${GID} . .

@@ -29,12 +29,6 @@
             }
         }
     },
-    "mounts": [
-        "type=bind,source=${env:SSH_AUTH_SOCK},target=/ssh-agent"
-    ],
-    "containerEnv": {
-        "SSH_AUTH_SOCK": "/ssh-agent"
-    },
     "remoteEnv": {
         "SSH_AUTH_SOCK": "/ssh-agent"
     }
