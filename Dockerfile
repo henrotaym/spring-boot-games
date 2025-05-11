@@ -53,7 +53,7 @@ COPY --from=node --chown=${UID}:${GID} /usr/local/lib /usr/local/lib
 COPY --from=node --chown=${UID}:${GID} /usr/local/include /usr/local/include
 COPY --from=node --chown=${UID}:${GID} /usr/local/bin /usr/local/bin
 
-RUN npm install -g gitmoji-cli lefthook
+RUN npm install --global gitmoji-cli lefthook git-open
 
 # Create user matching host (permissions issue)
 RUN if ! getent group ${GID} > /dev/null; then \
@@ -68,13 +68,6 @@ USER ${UID}:${GID}
 
 # Set working directory
 WORKDIR /opt/apps/app
-
-# Configure gitmoji & lefthook
-COPY --chown=${UID}:${GID} ./.git ./.git
-COPY --chown=${UID}:${GID} ./lefthook.yml .
-
-RUN gitmoji --init && \
-    lefthook install
 
 # Copy sourcecode
 COPY --chown=${UID}:${GID} . .
