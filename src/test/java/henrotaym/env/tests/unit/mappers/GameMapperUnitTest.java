@@ -1,4 +1,4 @@
-package henrotaym.env.unit.mappers;
+package henrotaym.env.tests.unit.mappers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
