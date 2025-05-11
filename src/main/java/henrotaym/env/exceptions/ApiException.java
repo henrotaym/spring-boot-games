@@ -1,12 +1,10 @@
 package henrotaym.env.exceptions;
 
+import henrotaym.env.enums.exceptions.ExceptionType;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-
-import org.springframework.http.HttpStatus;
-
-import henrotaym.env.enums.exceptions.ExceptionType;
 import lombok.Builder;
+import org.springframework.http.HttpStatus;
 
 @Builder
 public record ApiException(
@@ -15,5 +13,4 @@ public record ApiException(
     LocalDateTime timestamp,
     ExceptionType type,
     HashMap<String, ?> data,
-    StackTraceElement[] stackTrace
-) {}
+    StackTraceElement[] stackTrace) {}

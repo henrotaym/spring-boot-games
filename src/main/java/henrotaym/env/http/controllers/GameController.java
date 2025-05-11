@@ -1,8 +1,12 @@
 package henrotaym.env.http.controllers;
 
+import henrotaym.env.http.requests.GameRequest;
+import henrotaym.env.http.resources.GameResource;
+import henrotaym.env.services.GameService;
+import jakarta.validation.Valid;
 import java.math.BigInteger;
 import java.util.List;
-
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,51 +18,45 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import henrotaym.env.http.requests.GameRequest;
-import henrotaym.env.http.resources.GameResource;
-import henrotaym.env.services.GameService;
-import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-
 @AllArgsConstructor
 @RestController
 @RequestMapping("games")
 public class GameController {
-    private GameService gameService;
-    
-    @PostMapping("")
-    public ResponseEntity<GameResource> store(@RequestBody @Valid GameRequest request) {
-        GameResource game = this.gameService.store(request);
+  private GameService gameService;
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .body(game);
-    }
+  @PostMapping("")
+  public ResponseEntity<GameResource> store(@RequestBody @Valid GameRequest request) {
+    GameResource game = this.gameService.store(request);
 
-    @GetMapping("{id}")
-    public ResponseEntity<GameResource> show(@PathVariable BigInteger id) {
-        GameResource game = this.gameService.show(id);
+    return ResponseEntity.status(HttpStatus.CREATED).body(game);
+  }
 
-        return ResponseEntity.ok(game);
-    }
+  @GetMapping("{id}")
+  public ResponseEntity<GameResource> show(@PathVariable BigInteger id) {
+    GameResource game = this.gameService.show(id);
 
-    @PutMapping("{id}")
-    public ResponseEntity<GameResource> update(@PathVariable BigInteger id, @RequestBody @Valid GameRequest request) {
-        GameResource game = this.gameService.update(id, request);
+    return ResponseEntity.ok(game);
+  }
 
-        return ResponseEntity.ok(game);
-    }
+  @PutMapping("{id}")
+  public ResponseEntity<GameResource> update(
+      @PathVariable BigInteger id, @RequestBody @Valid GameRequest request) {
+    GameResource game = this.gameService.update(id, request);
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<Object> destroy(@PathVariable BigInteger id) {
-        this.gameService.destroy(id);
+    return ResponseEntity.ok(game);
+  }
 
-        return ResponseEntity.noContent().build();
-    }
+  @DeleteMapping("{id}")
+  public ResponseEntity<Object> destroy(@PathVariable BigInteger id) {
+    this.gameService.destroy(id);
 
-    @GetMapping("")
-    public ResponseEntity<List<GameResource>> index() {
-        List<GameResource> games = this.gameService.index();
+    return ResponseEntity.noContent().build();
+  }
 
-        return ResponseEntity.ok(games);
-    }
+  @GetMapping("")
+  public ResponseEntity<List<GameResource>> index() {
+    List<GameResource> games = this.gameService.index();
+
+    return ResponseEntity.ok(games);
+  }
 }

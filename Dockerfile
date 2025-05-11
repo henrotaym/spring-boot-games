@@ -38,9 +38,10 @@ ENV PATH="$MAVEN_HOME/bin:${PATH}"
 # Install google java formatter
 RUN wget --output-document=/usr/local/lib/google-java-format.jar https://github.com/google/google-java-format/releases/download/v${GOOGLE_JAVA_FORMAT_VERSION}/google-java-format-${GOOGLE_JAVA_FORMAT_VERSION}-all-deps.jar && chmod +x /usr/local/lib/google-java-format.jar
 
-# Install git
+# Install git and gitmoji (optional)
 RUN apt-get update && \
-    apt-get install -y git
+apt-get install -y git nodejs npm && \
+npm install -g gitmoji-cli
 
 # Create user matching host (permissions issue)
 RUN if ! getent group ${GID} > /dev/null; then \
