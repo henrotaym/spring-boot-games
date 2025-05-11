@@ -30,6 +30,7 @@ public class GameFactoryFeatureTest extends ApplicationTest {
     Game game = this.gameFactory.make(g -> g.setName(name));
     assertEquals(name, game.getName());
     assertNull(game.getId());
+    assertNull(game.getId());
     assertEquals(0, this.gameRepository.count());
   }
 
