@@ -14,10 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import henrotaym.env.entities.Game;
 import henrotaym.env.http.requests.GameRequest;
 import henrotaym.env.http.resources.GameResource;
-import henrotaym.env.repositories.GameRepository;
 import henrotaym.env.services.GameService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

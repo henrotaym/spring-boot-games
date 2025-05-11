@@ -12,8 +12,21 @@
                 "vmware.vscode-spring-boot",
                 "vscjava.vscode-maven",
                 "humao.rest-client",
-                "chris-rimmer.liquibase-snippets"
-            ]
+                "chris-rimmer.liquibase-snippets",
+                "lcjuves.vscode-gjf"
+            ],
+            "settings": {
+                "vscode-gjf.execJarPath": "/usr/local/lib/google-java-format.jar",
+                "[java]": {
+                    "editor.defaultFormatter": "lcjuves.vscode-gjf",
+                    "editor.formatOnSave": true,
+                    "editor.codeActionsOnSave": {
+                        "source.organizeImports": "explicit"
+                    }
+                },
+                "java.compile.nullAnalysis.mode": "automatic",
+                "extensions.ignoreRecommendations": true
+            }
         }
     }
 }

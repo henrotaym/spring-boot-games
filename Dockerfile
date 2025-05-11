@@ -4,6 +4,7 @@ ARG TARGETPLATFORM
 ARG BUILDPLATFORM
 ARG JDK_VERSION=23.0.1
 ARG MAVEN_VERSION=3.9.9
+ARG GOOGLE_JAVA_FORMAT_VERSION=1.27.0
 ARG UID=1000
 ARG GID=1000
 ARG APP_PORT=8080
@@ -34,10 +35,12 @@ ENV MAVEN_HOME="/usr/local/apache-maven-${MAVEN_VERSION}"
 ENV MAVEN_OPTS="-Dmaven.repo.local=/opt/apps/app/.m2"
 ENV PATH="$MAVEN_HOME/bin:${PATH}"
 
-# Install git and gitmoji (optional)
+# Install google java formatter
+RUN wget --output-document=/usr/local/lib/google-java-format.jar https://github.com/google/google-java-format/releases/download/v${GOOGLE_JAVA_FORMAT_VERSION}/google-java-format-${GOOGLE_JAVA_FORMAT_VERSION}-all-deps.jar && chmod +x /usr/local/lib/google-java-format.jar
+
+# Install git
 RUN apt-get update && \
-    apt-get install -y git nodejs npm && \
-    npm install -g gitmoji-cli
+    apt-get install -y git
 
 # Create user matching host (permissions issue)
 RUN if ! getent group ${GID} > /dev/null; then \
