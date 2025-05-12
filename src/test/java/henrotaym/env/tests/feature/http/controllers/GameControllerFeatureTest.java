@@ -32,7 +32,7 @@ public class GameControllerFeatureTest extends ApplicationTest {
     this.jsonClient
         .request(request -> request.post("/games").content(body))
         .perform()
-        .contains("$.name", content -> content.value(name))
+        .content("$.name", content -> content.value(name))
         .status(status -> status.isCreated());
 
     assertEquals(1, this.gameRepository.count());
@@ -47,7 +47,7 @@ public class GameControllerFeatureTest extends ApplicationTest {
     this.jsonClient
         .request(request -> request.put("/games/{id}", game.getId()).content(body))
         .perform()
-        .contains("$.name", content -> content.value(newName))
+        .content("$.name", content -> content.value(newName))
         .status(status -> status.isOk());
 
     Game updatedGame = this.gameRepository.findById(game.getId()).get();

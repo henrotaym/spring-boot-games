@@ -25,7 +25,7 @@ public class JsonResponse {
     return this;
   }
 
-  public JsonResponse contains(
+  public JsonResponse content(
       String expression, Function<JsonPathResultMatchers, ResultMatcher> callback)
       throws Exception {
     this.response.andExpect(callback.apply(MockMvcResultMatchers.jsonPath(expression)));
