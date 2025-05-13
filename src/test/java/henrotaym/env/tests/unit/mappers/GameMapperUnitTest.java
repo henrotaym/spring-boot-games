@@ -13,7 +13,7 @@ public class GameMapperUnitTest {
   @Test
   void it_transforms_a_game_to_a_game_resource() {
     GameMapper gameMapper = new GameMapper();
-    Game game = new Game(new BigInteger("1"), ":test");
+    Game game = new Game(new BigInteger("1"), ":test", null);
 
     GameResource gameResource = gameMapper.resource(game);
 
@@ -25,7 +25,7 @@ public class GameMapperUnitTest {
   void it_transforms_game_request_to_game() {
     GameMapper gameMapper = new GameMapper();
     GameRequest gameRequest = new GameRequest(":name");
-    Game game = new Game(new BigInteger("1"), ":anotherName");
+    Game game = new Game(new BigInteger("1"), ":anotherName", null);
 
     Game modifiedGame = gameMapper.request(gameRequest, game);
 

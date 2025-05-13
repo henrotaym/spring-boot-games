@@ -51,8 +51,8 @@ public class GameServiceUnitTest {
     GameMapper gameMapper = mock(GameMapper.class);
     GameService gameService = new GameService(gameRepository, gameMapper);
 
-    Game existingGame = new Game(bigInt, ":name");
-    Game updatedGame = new Game(bigInt, ":name2");
+    Game existingGame = new Game(bigInt, ":name", null);
+    Game updatedGame = new Game(bigInt, ":name2", null);
     GameResource gameResource = new GameResource(bigInt, ":name3");
 
     when(gameRepository.findById(bigInt)).thenReturn(Optional.of(existingGame));
