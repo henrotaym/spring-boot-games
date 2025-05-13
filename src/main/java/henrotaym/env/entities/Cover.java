@@ -4,8 +4,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.math.BigInteger;
 import lombok.AllArgsConstructor;
@@ -18,15 +16,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "games")
-public class Game {
+@Table(name = "covers")
+public class Cover {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private BigInteger id;
 
-  private String name;
-
-  @OneToOne(optional = false)
-  @JoinColumn(name = "cover_id", nullable = false, unique = true)
-  private Cover cover;
+  private String url;
 }

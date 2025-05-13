@@ -12,8 +12,6 @@ services:
       - "${APP_PORT_FORWARD}:${APP_PORT}"
     volumes:
       - ./:/opt/apps/app
-      - ${SSH_AUTH_SOCK}:/ssh-agent:ro
-      - ${HOME:-${USERPROFILE}}/.git-credentials:/home/current/.git-credentials:ro
     env_file:
       - .env
     networks:
