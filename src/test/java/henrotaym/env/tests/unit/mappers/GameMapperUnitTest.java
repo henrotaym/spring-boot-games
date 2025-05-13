@@ -32,14 +32,4 @@ public class GameMapperUnitTest {
     assertEquals(game.getId(), modifiedGame.getId());
     assertEquals(gameRequest.name(), modifiedGame.getName());
   }
-
-  // @Test
-  // void it_transforms_an_api_exception_to_a_game()
-  // {
-  //     Apple apple = new Apple(100);
-  //     AppleMapper appleMapper = new AppleMapper();
-  //     Compote compote = appleMapper.compote(apple);
-
-  //     assertEquals(apple.weight() / 2, compote.weight());
-  // }
 }
