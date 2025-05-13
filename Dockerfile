@@ -14,11 +14,14 @@ ARG UID=1000
 ARG GID=1000
 ARG APP_PORT=8080
 
-# Install dependencies
+# Install git
 RUN apt-get update && \
-    apt-get install -y wget git nano
+    apt-get install -y wget git nano && \
+    wget --output-document=/etc/bash_completion.d/git-completion.bash \
+        https://raw.githubusercontent.com/git/git/refs/heads/master/contrib/completion/git-completion.bash && \
+    echo "source /etc/bash_completion.d/git-completion.bash" >> /etc/bash.bashrc
 
-ENV GIT_EDITOR nano
+ENV GIT_EDITOR=nano
 
 # Download java binaries
 RUN arch=$(echo ${TARGETPLATFORM} | sed 's/.*\///') && \
@@ -59,9 +62,7 @@ RUN npm install --global gitmoji-cli lefthook git-open
 RUN if ! getent group ${GID} > /dev/null; then \
     groupadd -g ${GID} app; fi && \
     if ! getent passwd ${UID} > /dev/null; then \
-    useradd -u ${UID} -g ${GID} -m -s /bin/bash app; fi && \
-    userName=$(getent passwd $UID | cut -d: -f1) && \
-    ln -s /home/$userName /home/current
+    useradd -u ${UID} -g ${GID} -m -s /bin/bash app; fi
 
 # Use host user
 USER ${UID}:${GID}
