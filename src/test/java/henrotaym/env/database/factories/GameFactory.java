@@ -1,36 +1,25 @@
 package henrotaym.env.database.factories;
 
 import henrotaym.env.entities.Game;
-import henrotaym.env.repositories.GameRepository;
-import java.util.function.Consumer;
-import lombok.AllArgsConstructor;
+import java.math.BigInteger;
 import net.datafaker.Faker;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
-@AllArgsConstructor
 @Component
-public class GameFactory {
-  private Faker faker;
-  private GameRepository gameRepository;
+public class GameFactory extends EntityFactory<Game> {
 
-  public Game make(Consumer<Game> callback) {
-    Game game = new Game();
-    game.setName(this.faker.naruto().character());
-
-    callback.accept(game);
-
-    return game;
+  public GameFactory(Faker faker, JpaRepository<Game, BigInteger> repository) {
+    super(faker, repository);
   }
 
-  public Game make() {
-    return this.make((_) -> {});
+  @Override
+  protected Game entity() {
+    return new Game();
   }
 
-  public Game create(Consumer<Game> callback) {
-    return this.gameRepository.save(this.make(callback));
-  }
-
-  public Game create() {
-    return this.create((_) -> {});
+  @Override
+  protected void definitions(Game entity) {
+    entity.setName(this.faker.naruto().character());
   }
 }

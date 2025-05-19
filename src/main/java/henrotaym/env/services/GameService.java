@@ -23,18 +23,13 @@ public class GameService {
   public GameResource store(GameRequest request) {
     Game game = new Game();
 
-    game.setCover(this.getCover(request));
-    game = this.gameRepository.save(this.gameMapper.request(request, game));
-
-    return this.gameMapper.resource(game);
+    return this.storeOrUpdate(request, game);
   }
 
   public GameResource update(BigInteger id, GameRequest request) {
     Game game = this.findById(id);
 
-    game = this.gameRepository.save(this.gameMapper.request(request, game));
-
-    return this.gameMapper.resource(game);
+    return this.storeOrUpdate(request, game);
   }
 
   public GameResource show(BigInteger id) {
@@ -67,5 +62,12 @@ public class GameService {
     }
 
     return this.coverRepository.findById(request.cover().id()).get();
+  }
+
+  private GameResource storeOrUpdate(GameRequest request, Game game) {
+    game.setCover(this.getCover(request));
+    game = this.gameRepository.save(this.gameMapper.request(request, game));
+
+    return this.gameMapper.resource(game);
   }
 }
