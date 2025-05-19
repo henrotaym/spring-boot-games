@@ -2,7 +2,6 @@ package henrotaym.env.utils.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.http.MediaType;
@@ -32,7 +31,7 @@ public class JsonRequest {
     return this.verb(MockMvcRequestBuilders.delete(uriTemplate, uriVariables));
   }
 
-  public JsonRequest content(Map<?, ?> content) throws JsonProcessingException {
+  public JsonRequest content(Object content) throws JsonProcessingException {
     this.request.content(this.objectMapper.writeValueAsString(content));
 
     return this;

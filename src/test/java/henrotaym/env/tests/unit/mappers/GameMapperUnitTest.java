@@ -13,7 +13,9 @@ public class GameMapperUnitTest {
   @Test
   void it_transforms_a_game_to_a_game_resource() {
     GameMapper gameMapper = new GameMapper();
-    Game game = new Game(new BigInteger("1"), ":test");
+    Game game = new Game();
+    game.setId(new BigInteger("1"));
+    game.setName(":test");
 
     GameResource gameResource = gameMapper.resource(game);
 
@@ -24,13 +26,15 @@ public class GameMapperUnitTest {
   @Test
   void it_transforms_game_request_to_game() {
     GameMapper gameMapper = new GameMapper();
-    GameRequest gameRequest = new GameRequest(":name");
-    Game game = new Game(new BigInteger("1"), ":anotherName");
+    GameRequest gameRequest = new GameRequest(":name", null);
+    Game game = new Game();
+    game.setId(new BigInteger("1"));
+    game.setName(":anotherName");
 
     Game modifiedGame = gameMapper.request(gameRequest, game);
 
     assertEquals(game.getId(), modifiedGame.getId());
-    assertEquals(gameRequest.name(), modifiedGame.getName());
+    assertEquals(gameRequest.getName(), modifiedGame.getName());
   }
 
   // @Test

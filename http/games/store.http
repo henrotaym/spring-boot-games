@@ -2,5 +2,9 @@ POST http://app:8080/api/games
 Content-Type: application/json
 
 {
-    "name": "test"
+    "name": ":name3",
+    "cover" : {
+        "id": 1,
+        "url": ":url2" 
+    }
 }

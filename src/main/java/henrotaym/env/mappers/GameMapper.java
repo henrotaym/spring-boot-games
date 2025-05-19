@@ -12,7 +12,7 @@ public class GameMapper {
   }
 
   public Game request(GameRequest request, Game game) {
-    game.setName(request.name());
+    game.setName(request.getName());
 
     return game;
   }
