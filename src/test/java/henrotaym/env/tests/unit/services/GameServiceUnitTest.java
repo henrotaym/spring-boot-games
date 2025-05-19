@@ -11,6 +11,7 @@ import henrotaym.env.entities.Game;
 import henrotaym.env.http.requests.GameRequest;
 import henrotaym.env.http.resources.GameResource;
 import henrotaym.env.mappers.GameMapper;
+import henrotaym.env.repositories.CoverRepository;
 import henrotaym.env.repositories.GameRepository;
 import henrotaym.env.services.GameService;
 import java.math.BigInteger;
@@ -21,11 +22,12 @@ public class GameServiceUnitTest {
   @Test
   public void it_stores_a_game_resource_based_on_incoming_request() {
     GameRepository gameRepository = mock(GameRepository.class);
+    CoverRepository coverRepository = mock(CoverRepository.class);
     GameMapper gameMapper = mock(GameMapper.class);
-    GameService gameService = new GameService(gameRepository, gameMapper);
-    GameRequest request = new GameRequest(":name");
+    GameService gameService = new GameService(gameRepository, coverRepository, gameMapper);
+    GameRequest request = new GameRequest(":name", null);
     Game game = new Game();
-    GameResource gameResource = new GameResource(new BigInteger("1"), ":name");
+    GameResource gameResource = new GameResource(new BigInteger("1"), ":name", null);
 
     when(gameMapper.request(eq(request), any(Game.class))).thenReturn(game);
     when(gameRepository.save(game)).thenReturn(game);
@@ -45,15 +47,16 @@ public class GameServiceUnitTest {
   @Test
   public void it_updates_a_game_based_on_incoming_request() {
     BigInteger bigInt = BigInteger.valueOf(1);
-    GameRequest request = new GameRequest(":name2");
+    GameRequest request = new GameRequest(":name2", null);
 
     GameRepository gameRepository = mock(GameRepository.class);
     GameMapper gameMapper = mock(GameMapper.class);
-    GameService gameService = new GameService(gameRepository, gameMapper);
+    CoverRepository coverRepository = mock(CoverRepository.class);
+    GameService gameService = new GameService(gameRepository, coverRepository, gameMapper);
 
-    Game existingGame = new Game(bigInt, ":name");
-    Game updatedGame = new Game(bigInt, ":name2");
-    GameResource gameResource = new GameResource(bigInt, ":name3");
+    Game existingGame = new Game(bigInt, ":name", null);
+    Game updatedGame = new Game(bigInt, ":name2", null);
+    GameResource gameResource = new GameResource(bigInt, ":name3", null);
 
     when(gameRepository.findById(bigInt)).thenReturn(Optional.of(existingGame));
     when(gameMapper.request(request, existingGame)).thenReturn(existingGame);

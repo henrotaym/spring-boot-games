@@ -4,8 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import henrotaym.env.ApplicationTest;
+import henrotaym.env.database.factories.CoverFactory;
 import henrotaym.env.database.factories.GameFactory;
+import henrotaym.env.entities.Cover;
 import henrotaym.env.entities.Game;
+import henrotaym.env.http.requests.GameRequest;
+import henrotaym.env.http.requests.relationships.CoverRelationshipRequest;
+import henrotaym.env.repositories.CoverRepository;
 import henrotaym.env.repositories.GameRepository;
 import henrotaym.env.utils.api.JsonClient;
 import java.util.Map;
@@ -20,22 +25,61 @@ public class GameControllerFeatureTest extends ApplicationTest {
 
   @Autowired GameRepository gameRepository;
 
+  @Autowired CoverRepository coverRepository;
+
   @Autowired GameFactory gameFactory;
+
+  @Autowired CoverFactory coverFactory;
 
   @Autowired JsonClient jsonClient;
 
   @Test
-  public void it_responds_to_store_url() throws Exception {
+  public void it_responds_to_store_url_without_cover() throws Exception {
     String name = "test";
-    Map<String, String> body = Map.of("name", name);
+    GameRequest gameRequest = new GameRequest(name, null);
 
     this.jsonClient
-        .request(request -> request.post("/games").content(body))
+        .request(request -> request.post("/games").content(gameRequest))
         .perform()
         .content("$.name", content -> content.value(name))
         .status(status -> status.isCreated());
 
     assertEquals(1, this.gameRepository.count());
+  }
+
+  @Test
+  public void it_responds_to_store_url_with_an_existing_cover() throws Exception {
+    Cover cover = this.coverFactory.create();
+    String name = "test";
+    CoverRelationshipRequest coverRelationshipRequest = new CoverRelationshipRequest(cover.getId());
+    GameRequest gameRequest = new GameRequest(name, coverRelationshipRequest);
+
+    this.jsonClient
+        .request(request -> request.post("/games").content(gameRequest))
+        .perform()
+        .content("$.name", content -> content.value(name))
+        .content("$.cover.id", content -> content.value(cover.getId()))
+        .content("$.cover.url", content -> content.value(cover.getUrl()))
+        .status(status -> status.isCreated());
+
+    assertEquals(1, this.coverRepository.count());
+    assertEquals(1, this.gameRepository.count());
+  }
+
+  @Test
+  public void it_throws_validation_message_to_store_url_with_wrongly_formated_cover()
+      throws Exception {
+    String name = "test";
+    CoverRelationshipRequest coverRelationshipRequest = new CoverRelationshipRequest(null);
+    GameRequest gameRequest = new GameRequest(name, coverRelationshipRequest);
+
+    this.jsonClient
+        .request(request -> request.post("/games").content(gameRequest))
+        .perform()
+        .content("$.data.['cover.id']", content -> content.exists())
+        .status(status -> status.isBadRequest());
+
+    assertEquals(0, this.gameRepository.count());
   }
 
   @Test

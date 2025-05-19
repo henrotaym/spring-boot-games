@@ -1,9 +1,11 @@
 package henrotaym.env.services;
 
+import henrotaym.env.entities.Cover;
 import henrotaym.env.entities.Game;
 import henrotaym.env.http.requests.GameRequest;
 import henrotaym.env.http.resources.GameResource;
 import henrotaym.env.mappers.GameMapper;
+import henrotaym.env.repositories.CoverRepository;
 import henrotaym.env.repositories.GameRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.math.BigInteger;
@@ -15,10 +17,13 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class GameService {
   private GameRepository gameRepository;
+  private CoverRepository coverRepository;
   private GameMapper gameMapper;
 
   public GameResource store(GameRequest request) {
     Game game = new Game();
+
+    game.setCover(this.getCover(request));
     game = this.gameRepository.save(this.gameMapper.request(request, game));
 
     return this.gameMapper.resource(game);
@@ -54,5 +59,13 @@ public class GameService {
     return this.gameRepository
         .findById(id)
         .orElseThrow(() -> new EntityNotFoundException("Game not found."));
+  }
+
+  private Cover getCover(GameRequest request) {
+    if (request.cover() == null) {
+      return null;
+    }
+
+    return this.coverRepository.findById(request.cover().id()).get();
   }
 }

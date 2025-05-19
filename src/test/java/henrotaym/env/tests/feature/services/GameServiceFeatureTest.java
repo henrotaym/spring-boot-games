@@ -22,7 +22,7 @@ public class GameServiceFeatureTest extends ApplicationTest {
     Game originalGame = this.gameFactory.create(game -> game.setName(":minecraf"));
 
     String newName = ":roblox";
-    GameRequest gameRequest = new GameRequest(newName);
+    GameRequest gameRequest = new GameRequest(newName, null);
     GameResource gameResource = this.gameService.update(originalGame.getId(), gameRequest);
 
     assertEquals(originalGame.getId(), gameResource.id());
