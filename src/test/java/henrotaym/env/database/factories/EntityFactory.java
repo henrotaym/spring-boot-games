@@ -13,13 +13,15 @@ public abstract class EntityFactory<T> {
 
   protected abstract T entity();
 
-  protected abstract void definitions(T entity);
+  protected abstract void attributes(T entity);
+
+  protected void relationships(T entity) {}
 
   public T make(Consumer<T> callback) {
     T entity = this.entity();
-    this.definitions(entity);
-
+    this.attributes(entity);
     callback.accept(entity);
+    this.relationships(entity);
 
     return entity;
   }

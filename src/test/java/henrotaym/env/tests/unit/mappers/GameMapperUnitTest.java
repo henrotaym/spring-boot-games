@@ -3,6 +3,7 @@ package henrotaym.env.tests.unit.mappers;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import henrotaym.env.entities.Game;
+import henrotaym.env.entities.Studio;
 import henrotaym.env.http.requests.GameRequest;
 import henrotaym.env.http.resources.GameResource;
 import henrotaym.env.mappers.GameMapper;
@@ -12,8 +13,8 @@ import org.junit.jupiter.api.Test;
 public class GameMapperUnitTest {
   @Test
   void it_transforms_a_game_to_a_game_resource() {
-    GameMapper gameMapper = new GameMapper(null);
-    Game game = new Game(new BigInteger("1"), ":test", null);
+    GameMapper gameMapper = new GameMapper(null, null);
+    Game game = new Game(new BigInteger("1"), ":test", null, new Studio());
 
     GameResource gameResource = gameMapper.resource(game);
 
@@ -23,9 +24,9 @@ public class GameMapperUnitTest {
 
   @Test
   void it_transforms_game_request_to_game() {
-    GameMapper gameMapper = new GameMapper(null);
-    GameRequest gameRequest = new GameRequest(":name", null);
-    Game game = new Game(new BigInteger("1"), ":anotherName", null);
+    GameMapper gameMapper = new GameMapper(null, null);
+    GameRequest gameRequest = new GameRequest(":name", null, null);
+    Game game = new Game(new BigInteger("1"), ":anotherName", null, new Studio());
 
     Game modifiedGame = gameMapper.request(gameRequest, game);
 

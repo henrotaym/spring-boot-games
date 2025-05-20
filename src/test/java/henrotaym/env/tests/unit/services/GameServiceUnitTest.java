@@ -8,11 +8,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import henrotaym.env.entities.Game;
+import henrotaym.env.entities.Studio;
 import henrotaym.env.http.requests.GameRequest;
 import henrotaym.env.http.resources.GameResource;
 import henrotaym.env.mappers.GameMapper;
 import henrotaym.env.repositories.CoverRepository;
 import henrotaym.env.repositories.GameRepository;
+import henrotaym.env.repositories.StudioRepository;
 import henrotaym.env.services.GameService;
 import java.math.BigInteger;
 import java.util.Optional;
@@ -23,11 +25,13 @@ public class GameServiceUnitTest {
   public void it_stores_a_game_resource_based_on_incoming_request() {
     GameRepository gameRepository = mock(GameRepository.class);
     CoverRepository coverRepository = mock(CoverRepository.class);
+    StudioRepository studioRepository = mock(StudioRepository.class);
     GameMapper gameMapper = mock(GameMapper.class);
-    GameService gameService = new GameService(gameRepository, coverRepository, gameMapper);
-    GameRequest request = new GameRequest(":name", null);
+    GameService gameService =
+        new GameService(gameRepository, coverRepository, studioRepository, gameMapper);
+    GameRequest request = new GameRequest(":name", null, null);
     Game game = new Game();
-    GameResource gameResource = new GameResource(new BigInteger("1"), ":name", null);
+    GameResource gameResource = new GameResource(new BigInteger("1"), ":name", null, null);
 
     when(gameMapper.request(eq(request), any(Game.class))).thenReturn(game);
     when(gameRepository.save(game)).thenReturn(game);
@@ -47,16 +51,18 @@ public class GameServiceUnitTest {
   @Test
   public void it_updates_a_game_based_on_incoming_request() {
     BigInteger bigInt = BigInteger.valueOf(1);
-    GameRequest request = new GameRequest(":name2", null);
+    GameRequest request = new GameRequest(":name2", null, null);
 
     GameRepository gameRepository = mock(GameRepository.class);
     GameMapper gameMapper = mock(GameMapper.class);
     CoverRepository coverRepository = mock(CoverRepository.class);
-    GameService gameService = new GameService(gameRepository, coverRepository, gameMapper);
+    StudioRepository studioRepository = mock(StudioRepository.class);
+    GameService gameService =
+        new GameService(gameRepository, coverRepository, studioRepository, gameMapper);
 
-    Game existingGame = new Game(bigInt, ":name", null);
-    Game updatedGame = new Game(bigInt, ":name2", null);
-    GameResource gameResource = new GameResource(bigInt, ":name3", null);
+    Game existingGame = new Game(bigInt, ":name", null, new Studio());
+    Game updatedGame = new Game(bigInt, ":name2", null, new Studio());
+    GameResource gameResource = new GameResource(bigInt, ":name3", null, null);
 
     when(gameRepository.findById(bigInt)).thenReturn(Optional.of(existingGame));
     when(gameMapper.request(request, existingGame)).thenReturn(existingGame);

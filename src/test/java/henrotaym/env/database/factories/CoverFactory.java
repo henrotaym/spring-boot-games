@@ -19,7 +19,7 @@ public class CoverFactory extends EntityFactory<Cover> {
   }
 
   @Override
-  protected void definitions(Cover entity) {
+  protected void attributes(Cover entity) {
     entity.setUrl(this.faker.internet().url());
   }
 }

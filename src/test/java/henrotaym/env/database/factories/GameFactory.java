@@ -8,9 +8,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class GameFactory extends EntityFactory<Game> {
+  private StudioFactory studioFactory;
 
-  public GameFactory(Faker faker, JpaRepository<Game, BigInteger> repository) {
+  public GameFactory(
+      Faker faker, JpaRepository<Game, BigInteger> repository, StudioFactory studioFactory) {
     super(faker, repository);
+    this.studioFactory = studioFactory;
   }
 
   @Override
@@ -19,7 +22,14 @@ public class GameFactory extends EntityFactory<Game> {
   }
 
   @Override
-  protected void definitions(Game entity) {
-    entity.setName(this.faker.naruto().character());
+  protected void attributes(Game entity) {
+    entity.setName(this.faker.videoGame().title());
+  }
+
+  @Override
+  protected void relationships(Game entity) {
+    if (entity.getStudio() == null) {
+      entity.setStudio(this.studioFactory.create());
+    }
   }
 }
