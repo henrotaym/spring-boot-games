@@ -25,6 +25,7 @@ public class GameServiceFeatureTest extends ApplicationTest {
 
   @Test
   public void it_updates_game_based_on_incoming_game_request() {
+    // new GameResource(BigInteger.ONE, "sdf")
     Game originalGame = this.gameFactory.create();
     Studio studio = this.studioFactory.create();
 
@@ -36,8 +37,8 @@ public class GameServiceFeatureTest extends ApplicationTest {
     entityManager.flush();
     entityManager.clear();
 
-    assertEquals(originalGame.getId(), gameResource.id());
-    assertEquals(gameRequest.name(), gameResource.name());
+    assertEquals(originalGame.getId(), gameResource.getId());
+    assertEquals(gameRequest.name(), gameResource.getName());
     assertEquals(originalGame.getStudio().getId(), studio.getId());
   }
 }

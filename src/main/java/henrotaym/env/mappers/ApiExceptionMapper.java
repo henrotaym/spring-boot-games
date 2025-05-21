@@ -21,11 +21,11 @@ public class ApiExceptionMapper {
 
   public ApiExceptionResource resource(ApiException exception) {
     return new ApiExceptionResource(
-        exception.message(),
-        exception.status(),
-        exception.timestamp(),
-        exception.type(),
-        exception.data());
+        exception.getMessage(),
+        exception.getStatus(),
+        exception.getTimestamp(),
+        exception.getType(),
+        exception.getData());
   }
 
   public ApiException entityNotFound(EntityNotFoundException exception) {

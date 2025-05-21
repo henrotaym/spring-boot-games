@@ -26,7 +26,7 @@ public class StudioControllerFeatureTest extends ApplicationTest {
 
   @Test
   public void it_responds_to_store_url_without_cover() throws Exception {
-    Game game = this.gameFactory.create();
+    Game game = this.gameFactory.create(g -> g.setName("test"));
     String name = "test";
     List<GameRelationshipRequest> games = new ArrayList<GameRelationshipRequest>();
     games.add(this.gameMapper.relationshipRequest(game));
@@ -36,6 +36,8 @@ public class StudioControllerFeatureTest extends ApplicationTest {
         .request(request -> request.post("/studios").content(studioRequest))
         .perform()
         .content("$.name", content -> content.value(name))
+        .inList("$.games", "id", game.getId())
+        .inList("$.games", "name", game.getName())
         .status(status -> status.isCreated());
 
     assertEquals(2, this.studioRepository.count());

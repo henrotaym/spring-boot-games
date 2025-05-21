@@ -32,4 +32,10 @@ public class JsonResponse {
 
     return this;
   }
+
+  public <T extends Object> JsonResponse inList(String expression, String field, T value)
+      throws Exception {
+    return this.content(
+        expression + "[?(@." + field + " == \"" + value + "\")]", content -> content.exists());
+  }
 }
