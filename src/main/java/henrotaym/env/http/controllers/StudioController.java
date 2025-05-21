@@ -1,7 +1,8 @@
 package henrotaym.env.http.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import henrotaym.env.http.requests.StudioRequest;
-import henrotaym.env.http.resources.StudioResource;
+import henrotaym.env.http.resources.ConditionalSerializer;
 import henrotaym.env.services.StudioService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -19,9 +20,10 @@ public class StudioController {
   private StudioService studioService;
 
   @PostMapping("")
-  public ResponseEntity<StudioResource> store(@RequestBody @Valid StudioRequest request) {
-    StudioResource game = this.studioService.store(request);
+  public ResponseEntity<String> store(@RequestBody @Valid StudioRequest request)
+      throws JsonProcessingException {
+    ConditionalSerializer serializer = this.studioService.store(request);
 
-    return ResponseEntity.status(HttpStatus.CREATED).body(game);
+    return ResponseEntity.status(HttpStatus.CREATED).body(serializer.serialize());
   }
 }

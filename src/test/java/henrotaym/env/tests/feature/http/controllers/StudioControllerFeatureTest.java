@@ -25,7 +25,7 @@ public class StudioControllerFeatureTest extends ApplicationTest {
   @Autowired JsonClient jsonClient;
 
   @Test
-  public void it_responds_to_store_url_without_cover() throws Exception {
+  public void it_responds_to_store_url_with_games() throws Exception {
     Game game = this.gameFactory.create();
     String name = "test";
     List<GameRelationshipRequest> games = new ArrayList<GameRelationshipRequest>();
@@ -36,7 +36,8 @@ public class StudioControllerFeatureTest extends ApplicationTest {
         .request(request -> request.post("/studios").content(studioRequest))
         .perform()
         .content("$.name", content -> content.value(name))
-        .status(status -> status.isCreated());
+        .status(status -> status.isCreated())
+        .print();
 
     assertEquals(2, this.studioRepository.count());
   }

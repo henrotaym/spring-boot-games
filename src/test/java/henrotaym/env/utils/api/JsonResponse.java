@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.result.JsonPathResultMatchers;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.result.StatusResultMatchers;
 
@@ -31,5 +32,9 @@ public class JsonResponse {
     this.response.andExpect(callback.apply(MockMvcResultMatchers.jsonPath(expression)));
 
     return this;
+  }
+
+  public ResultActions print() throws Exception {
+    return this.response.andDo(MockMvcResultHandlers.print());
   }
 }

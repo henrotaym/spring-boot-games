@@ -36,8 +36,8 @@ public class GameServiceFeatureTest extends ApplicationTest {
     entityManager.flush();
     entityManager.clear();
 
-    assertEquals(originalGame.getId(), gameResource.id());
-    assertEquals(gameRequest.name(), gameResource.name());
+    assertEquals(originalGame.getId(), gameResource.getId());
+    assertEquals(gameRequest.name(), gameResource.getName());
     assertEquals(originalGame.getStudio().getId(), studio.getId());
   }
 }
