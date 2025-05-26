@@ -37,6 +37,16 @@ public class JsonRequest {
     return this;
   }
 
+  public JsonRequest included(String... included) {
+    return this.queryParam("included", included);
+  }
+
+  public JsonRequest queryParam(String name, String... values) {
+    this.request.queryParam(name, values);
+
+    return this;
+  }
+
   protected JsonRequest verb(MockHttpServletRequestBuilder verbRequest) {
     this.setRequest(verbRequest);
 

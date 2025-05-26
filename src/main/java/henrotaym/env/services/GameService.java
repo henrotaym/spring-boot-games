@@ -4,15 +4,14 @@ import henrotaym.env.entities.Cover;
 import henrotaym.env.entities.Game;
 import henrotaym.env.entities.Studio;
 import henrotaym.env.http.requests.GameRequest;
-import henrotaym.env.http.resources.GameResource;
 import henrotaym.env.mappers.GameMapper;
-import henrotaym.env.mappers.ResourceMapper;
 import henrotaym.env.repositories.CoverRepository;
 import henrotaym.env.repositories.GameRepository;
 import henrotaym.env.repositories.StudioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,39 +21,35 @@ public class GameService {
   private GameRepository gameRepository;
   private CoverRepository coverRepository;
   private StudioRepository studioRepository;
-  private ResourceMapper resourceMapper;
+  private GameMapper gameMapper;
 
-  public GameResource store(GameRequest request) {
+  public Game store(GameRequest request) {
     Game game = new Game();
 
     return this.storeOrUpdate(request, game);
   }
 
-  public GameResource update(BigInteger id, GameRequest request) {
-    Game game = this.findById(id);
+  public Game update(BigInteger id, GameRequest request, Set<String> included) {
+    Game game = this.findById(id, included);
 
     return this.storeOrUpdate(request, game);
   }
 
-  public GameResource show(BigInteger id) {
-    Game game = this.findById(id);
-
-    return this.resourceMapper.gameResource(game);
+  public Game show(BigInteger id, Set<String> included) {
+    return this.findById(id, included);
   }
 
-  public List<GameResource> index() {
-    return this.gameRepository.findAll().stream()
-        .map(game -> this.resourceMapper.gameResource(game))
-        .toList();
+  public List<Game> index(Set<String> included) {
+    return this.gameRepository.findAll();
   }
 
   public void destroy(BigInteger id) {
-    Game game = this.findById(id);
+    Game game = this.findById(id, null);
 
     this.gameRepository.delete(game);
   }
 
-  private Game findById(BigInteger id) {
+  private Game findById(BigInteger id, Set<String> included) {
     return this.gameRepository
         .findById(id)
         .orElseThrow(() -> new EntityNotFoundException("Game not found."));
@@ -72,11 +67,10 @@ public class GameService {
     return this.studioRepository.findById(request.studio().id()).get();
   }
 
-  private GameResource storeOrUpdate(GameRequest request, Game game) {
+  private Game storeOrUpdate(GameRequest request, Game game) {
     game.setCover(this.getCover(request));
     game.setStudio(this.getStudio(request));
-    game = this.gameRepository.save(this.resourceMapper.getGameMapper().request(request, game));
 
-    return this.resourceMapper.gameResource(game);
+    return this.gameRepository.save(this.gameMapper.request(request, game));
   }
 }

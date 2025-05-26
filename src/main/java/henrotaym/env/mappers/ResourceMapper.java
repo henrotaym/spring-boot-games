@@ -7,6 +7,7 @@ import henrotaym.env.http.resources.CoverResource;
 import henrotaym.env.http.resources.GameResource;
 import henrotaym.env.http.resources.StudioResource;
 import java.util.List;
+import java.util.Set;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -19,12 +20,18 @@ public class ResourceMapper {
   private final GameMapper gameMapper;
   private final StudioMapper studioMapper;
 
-  public GameResource gameResource(Game game) {
+  public GameResource game(Game game, Set<String> included) {
     GameResource gameResource = this.gameMapper.resource(game);
-    StudioResource studioResource = this.studioMapper.resource(game.getStudio());
-    gameResource.setStudio(studioResource);
+    if (included == null) {
+      return gameResource;
+    }
 
-    if (game.getCover() != null) {
+    if (included.contains("studio")) {
+      StudioResource studioResource = this.studioMapper.resource(game.getStudio());
+      gameResource.setStudio(studioResource);
+    }
+
+    if (included.contains("cover") && game.getCover() != null) {
       CoverResource coverResource = this.coverMapper.resource(game.getCover());
       gameResource.setCover(coverResource);
     }

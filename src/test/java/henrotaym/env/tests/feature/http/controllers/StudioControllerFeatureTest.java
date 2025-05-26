@@ -25,15 +25,15 @@ public class StudioControllerFeatureTest extends ApplicationTest {
   @Autowired JsonClient jsonClient;
 
   @Test
-  public void it_responds_to_store_url_without_cover() throws Exception {
-    Game game = this.gameFactory.create(g -> g.setName("test"));
-    String name = "test";
+  public void it_responds_to_store_url_and_includes_games() throws Exception {
+    String name = ":test";
+    Game game = this.gameFactory.create();
     List<GameRelationshipRequest> games = new ArrayList<GameRelationshipRequest>();
     games.add(this.gameMapper.relationshipRequest(game));
     StudioRequest studioRequest = new StudioRequest(name, games);
 
     this.jsonClient
-        .request(request -> request.post("/studios").content(studioRequest))
+        .request(request -> request.post("/studios").included("games").content(studioRequest))
         .perform()
         .content("$.name", content -> content.value(name))
         .inList("$.games", "id", game.getId())
