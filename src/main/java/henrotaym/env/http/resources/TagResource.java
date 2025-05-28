@@ -9,10 +9,8 @@ import lombok.Setter;
 @Setter
 @Getter
 @RequiredArgsConstructor
-public class GameResource {
+public class TagResource {
   private final BigInteger id;
   private final String name;
-  private CoverResource cover;
-  private StudioResource studio;
-  private List<TagResource> tags;
+  private List<GameResource> games;
 }

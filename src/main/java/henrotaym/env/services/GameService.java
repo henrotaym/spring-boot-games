@@ -3,13 +3,14 @@ package henrotaym.env.services;
 import henrotaym.env.entities.Cover;
 import henrotaym.env.entities.Game;
 import henrotaym.env.entities.Studio;
+import henrotaym.env.entities.Tag;
 import henrotaym.env.http.requests.GameRequest;
 import henrotaym.env.http.resources.GameResource;
-import henrotaym.env.mappers.GameMapper;
 import henrotaym.env.mappers.ResourceMapper;
 import henrotaym.env.repositories.CoverRepository;
 import henrotaym.env.repositories.GameRepository;
 import henrotaym.env.repositories.StudioRepository;
+import henrotaym.env.repositories.TagRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.math.BigInteger;
 import java.util.List;
@@ -19,6 +20,8 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public class GameService {
+
+  private final TagRepository tagRepository;
   private GameRepository gameRepository;
   private CoverRepository coverRepository;
   private StudioRepository studioRepository;
@@ -72,10 +75,16 @@ public class GameService {
     return this.studioRepository.findById(request.studio().id()).get();
   }
 
+  private List<Tag> getTags(GameRequest request) {
+    return request.tags().stream().map(tag -> this.tagRepository.findById(tag.id()).get()).toList();
+  }
+
   private GameResource storeOrUpdate(GameRequest request, Game game) {
     game.setCover(this.getCover(request));
     game.setStudio(this.getStudio(request));
-    game = this.gameRepository.save(this.resourceMapper.getGameMapper().request(request, game));
+    game.setTags(this.getTags(request));
+    game = this.resourceMapper.getGameMapper().request(request, game);
+    game = this.gameRepository.save(game);
 
     return this.resourceMapper.gameResource(game);
   }

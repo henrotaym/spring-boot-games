@@ -1,9 +1,11 @@
 package henrotaym.env.utils.api;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import java.util.function.Function;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.hamcrest.Matchers;
 import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
@@ -37,5 +39,11 @@ public class JsonResponse {
       throws Exception {
     return this.content(
         expression + "[?(@." + field + " == \"" + value + "\")]", content -> content.exists());
+  }
+
+  public JsonResponse listSize(String expression, int size) throws Exception {
+    this.response.andExpect(jsonPath(expression, Matchers.hasSize(size)));
+
+    return this;
   }
 }

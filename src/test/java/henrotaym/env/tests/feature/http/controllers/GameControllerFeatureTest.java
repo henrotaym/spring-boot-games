@@ -7,16 +7,22 @@ import henrotaym.env.ApplicationTest;
 import henrotaym.env.database.factories.CoverFactory;
 import henrotaym.env.database.factories.GameFactory;
 import henrotaym.env.database.factories.StudioFactory;
+import henrotaym.env.database.factories.TagFactory;
 import henrotaym.env.entities.Cover;
 import henrotaym.env.entities.Game;
 import henrotaym.env.entities.Studio;
+import henrotaym.env.entities.Tag;
 import henrotaym.env.http.requests.GameRequest;
 import henrotaym.env.http.requests.relationships.CoverRelationshipRequest;
 import henrotaym.env.http.requests.relationships.StudioRelationshipRequest;
+import henrotaym.env.http.requests.relationships.TagRelationshipRequest;
+import henrotaym.env.mappers.TagMapper;
 import henrotaym.env.repositories.CoverRepository;
 import henrotaym.env.repositories.GameRepository;
 import henrotaym.env.utils.api.JsonClient;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
@@ -25,6 +31,8 @@ public class GameControllerFeatureTest extends ApplicationTest {
   @Autowired MockMvc mockMvc;
 
   @Autowired ObjectMapper objectMapper;
+
+  @Autowired TagMapper tagMapper;
 
   @Autowired GameRepository gameRepository;
 
@@ -36,6 +44,8 @@ public class GameControllerFeatureTest extends ApplicationTest {
 
   @Autowired StudioFactory studioFactory;
 
+  @Autowired TagFactory tagFactory;
+
   @Autowired JsonClient jsonClient;
 
   @Test
@@ -44,7 +54,9 @@ public class GameControllerFeatureTest extends ApplicationTest {
     String name = "test";
     StudioRelationshipRequest studioRelationshipRequest =
         new StudioRelationshipRequest(studio.getId());
-    GameRequest gameRequest = new GameRequest(name, null, studioRelationshipRequest);
+    GameRequest gameRequest =
+        new GameRequest(
+            name, null, studioRelationshipRequest, new ArrayList<TagRelationshipRequest>());
 
     this.jsonClient
         .request(request -> request.post("/games").content(gameRequest))
@@ -59,12 +71,16 @@ public class GameControllerFeatureTest extends ApplicationTest {
   public void it_responds_to_store_url_with_an_existing_cover() throws Exception {
     Cover cover = this.coverFactory.create();
     Studio studio = this.studioFactory.create();
+    Tag tag = this.tagFactory.create();
     String name = "test";
     CoverRelationshipRequest coverRelationshipRequest = new CoverRelationshipRequest(cover.getId());
     StudioRelationshipRequest studioRelationshipRequest =
         new StudioRelationshipRequest(studio.getId());
+    List<TagRelationshipRequest> tagRelationshipRequests = new ArrayList<>();
+    tagRelationshipRequests.add(this.tagMapper.relationshipRequest(tag));
     GameRequest gameRequest =
-        new GameRequest(name, coverRelationshipRequest, studioRelationshipRequest);
+        new GameRequest(
+            name, coverRelationshipRequest, studioRelationshipRequest, tagRelationshipRequests);
 
     this.jsonClient
         .request(request -> request.post("/games").content(gameRequest))
@@ -74,6 +90,8 @@ public class GameControllerFeatureTest extends ApplicationTest {
         .content("$.cover.url", content -> content.value(cover.getUrl()))
         .content("$.studio.id", content -> content.value(studio.getId()))
         .content("$.studio.name", content -> content.value(studio.getName()))
+        .inList("$.tags", "id", tag.getId())
+        .listSize("$.tags", 1)
         .status(status -> status.isCreated());
 
     assertEquals(1, this.coverRepository.count());
@@ -91,7 +109,11 @@ public class GameControllerFeatureTest extends ApplicationTest {
 
     CoverRelationshipRequest coverRelationshipRequest = new CoverRelationshipRequest(null);
     GameRequest gameRequest =
-        new GameRequest(name, coverRelationshipRequest, studioRelationshipRequest);
+        new GameRequest(
+            name,
+            coverRelationshipRequest,
+            studioRelationshipRequest,
+            new ArrayList<TagRelationshipRequest>());
 
     this.jsonClient
         .request(request -> request.post("/games").content(gameRequest))
@@ -112,7 +134,11 @@ public class GameControllerFeatureTest extends ApplicationTest {
         new StudioRelationshipRequest(studio.getId());
 
     GameRequest gameRequest =
-        new GameRequest(name, coverRelationshipRequest, studioRelationshipRequest);
+        new GameRequest(
+            name,
+            coverRelationshipRequest,
+            studioRelationshipRequest,
+            new ArrayList<TagRelationshipRequest>());
 
     this.jsonClient
         .request(request -> request.post("/games").content(gameRequest))
@@ -130,7 +156,9 @@ public class GameControllerFeatureTest extends ApplicationTest {
     StudioRelationshipRequest studioRelationshipRequest =
         new StudioRelationshipRequest(game.getStudio().getId());
 
-    GameRequest gameRequest = new GameRequest(name, null, studioRelationshipRequest);
+    GameRequest gameRequest =
+        new GameRequest(
+            name, null, studioRelationshipRequest, new ArrayList<TagRelationshipRequest>());
 
     this.jsonClient
         .request(request -> request.put("/games/{id}", game.getId()).content(gameRequest))
@@ -153,7 +181,11 @@ public class GameControllerFeatureTest extends ApplicationTest {
         new StudioRelationshipRequest(studio.getId());
     CoverRelationshipRequest coverRelationshipRequest = new CoverRelationshipRequest(cover.getId());
     GameRequest gameRequest =
-        new GameRequest(name, coverRelationshipRequest, studioRelationshipRequest);
+        new GameRequest(
+            name,
+            coverRelationshipRequest,
+            studioRelationshipRequest,
+            new ArrayList<TagRelationshipRequest>());
 
     this.jsonClient
         .request(request -> request.put("/games/{id}", game.getId()).content(gameRequest))

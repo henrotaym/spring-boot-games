@@ -5,10 +5,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,4 +38,11 @@ public class Game {
   @ManyToOne(optional = false)
   @JoinColumn(name = "studio_id", nullable = false)
   private Studio studio;
+
+  @ManyToMany()
+  @JoinTable(
+      name = "game_tag",
+      joinColumns = @JoinColumn(name = "game_id", nullable = false),
+      inverseJoinColumns = @JoinColumn(name = "tag_id", nullable = false))
+  private List<Tag> tags = new ArrayList<Tag>();
 }

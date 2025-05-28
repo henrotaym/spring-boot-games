@@ -13,6 +13,7 @@ import henrotaym.env.http.resources.GameResource;
 import henrotaym.env.repositories.GameRepository;
 import henrotaym.env.services.GameService;
 import jakarta.persistence.EntityManager;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -31,7 +32,7 @@ public class GameServiceFeatureTest extends ApplicationTest {
 
     String newName = ":roblox";
     GameRequest gameRequest =
-        new GameRequest(newName, null, new StudioRelationshipRequest(studio.getId()));
+        new GameRequest(newName, null, new StudioRelationshipRequest(studio.getId()), List.of());
     GameResource gameResource = this.gameService.update(originalGame.getId(), gameRequest);
 
     entityManager.flush();
