@@ -1,5 +1,6 @@
 package henrotaym.env.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,5 +29,15 @@ public class Tag {
   private String name;
 
   @ManyToMany(mappedBy = "tags")
+  @JsonManagedReference
   private List<Game> games = new ArrayList<>();
+
+  public Tag setGames(List<Game> games) {
+    this.getGames().forEach(game -> game.getTags().remove(this));
+    games.forEach(game -> game.getTags().add(this));
+    this.getGames().clear();
+    this.getGames().addAll(games);
+
+    return this;
+  }
 }

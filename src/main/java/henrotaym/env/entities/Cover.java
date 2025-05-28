@@ -1,5 +1,6 @@
 package henrotaym.env.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,5 +27,12 @@ public class Cover {
   private String url;
 
   @OneToOne(mappedBy = "cover")
+  @JsonManagedReference
   private Game game;
+
+  public void setGame(Game game) {
+    this.getGame().setCover(null);
+    game.setCover(this);
+    this.game = game;
+  }
 }
