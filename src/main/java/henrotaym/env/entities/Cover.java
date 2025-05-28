@@ -1,5 +1,6 @@
 package henrotaym.env.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,5 +27,11 @@ public class Cover {
   private String url;
 
   @OneToOne(mappedBy = "cover")
+  @JsonBackReference
   private Game game;
+
+  public void setGame(Game game) {
+    game.setCover(this);
+    this.game = game;
+  }
 }

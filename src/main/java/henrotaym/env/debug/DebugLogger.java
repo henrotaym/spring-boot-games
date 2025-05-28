@@ -16,15 +16,15 @@ public class DebugLogger {
   }
 
   public void dump(Object... dumpables) throws JsonProcessingException {
-    this.logPretty(dumpables, pretty -> log.info(pretty));
+    this.logPretty(pretty -> log.info(pretty), dumpables);
   }
 
   public void dd(Object... dumpables) throws JsonProcessingException {
-    this.logPretty(dumpables, pretty -> log.error(pretty));
+    this.logPretty(pretty -> log.error(pretty), dumpables);
     System.exit(1);
   }
 
-  private void logPretty(Object[] dumpables, Consumer<String> callback)
+  private void logPretty(Consumer<String> callback, Object... dumpables)
       throws JsonProcessingException {
     callback.accept(this.pretty(dumpables));
   }
