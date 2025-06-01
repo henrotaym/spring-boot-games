@@ -14,6 +14,7 @@ import henrotaym.env.repositories.TagRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +40,7 @@ public class GameService {
     return this.storeOrUpdate(request, game);
   }
 
-  public GameResource show(BigInteger id) {
+  public GameResource show(BigInteger id, Set<String> include) {
     Game game = this.findById(id);
 
     return this.resourceMapper.gameResource(game);

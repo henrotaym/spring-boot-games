@@ -6,6 +6,7 @@ import henrotaym.env.services.GameService;
 import jakarta.validation.Valid;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @AllArgsConstructor
@@ -32,8 +34,9 @@ public class GameController {
   }
 
   @GetMapping("{id}")
-  public ResponseEntity<GameResource> show(@PathVariable BigInteger id) {
-    GameResource game = this.gameService.show(id);
+  public ResponseEntity<GameResource> show(
+      @PathVariable BigInteger id, @RequestParam(required = false) Set<String> include) {
+    GameResource game = this.gameService.show(id, include);
 
     return ResponseEntity.ok(game);
   }

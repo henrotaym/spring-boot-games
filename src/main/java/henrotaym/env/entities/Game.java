@@ -14,6 +14,7 @@ import jakarta.persistence.Table;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -53,5 +54,9 @@ public class Game {
   public void setTags(List<Tag> tags) {
     this.tags.clear();
     this.tags.addAll(tags);
+  }
+
+  public Set<String> getIncludables() {
+    return Set.of("studio", "cover", "tags");
   }
 }
