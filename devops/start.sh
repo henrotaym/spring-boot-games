@@ -1,3 +1,8 @@
 #!/usr/bin/env bash
 
-mvn spring-boot:run
+queue=""
+if [ "$1" == "--queue" ]; then
+  queue="-Dspring-boot.run.profiles=queue"
+fi
+
+mvn spring-boot:run $queue

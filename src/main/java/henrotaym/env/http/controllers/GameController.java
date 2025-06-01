@@ -1,8 +1,10 @@
 package henrotaym.env.http.controllers;
 
+import henrotaym.env.events.UserCreatedEvent;
 import henrotaym.env.http.requests.GameRequest;
 import henrotaym.env.http.resources.GameResource;
 import henrotaym.env.services.GameService;
+import henrotaym.env.services.events.EventEmitterService;
 import jakarta.validation.Valid;
 import java.math.BigInteger;
 import java.util.List;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("games")
 public class GameController {
   private GameService gameService;
+  private final EventEmitterService messageEmitter;
 
   @PostMapping("")
   public ResponseEntity<GameResource> store(@RequestBody @Valid GameRequest request) {
@@ -55,6 +58,8 @@ public class GameController {
 
   @GetMapping("")
   public ResponseEntity<List<GameResource>> index() {
+    this.messageEmitter.dispatch(new UserCreatedEvent(Integer.valueOf("1")));
+
     List<GameResource> games = this.gameService.index();
 
     return ResponseEntity.ok(games);

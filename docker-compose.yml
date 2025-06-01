@@ -42,6 +42,20 @@ services:
       retries: 3
       timeout: 5s
     restart: unless-stopped
+  queue:
+    image: rabbitmq:4.1-management
+    ports:
+      - "${QUEUE_PORT_FORWARD}:${QUEUE_PORT}"
+      - "${QUEUE_DASHBOARD_PORT_FORWARD}:${QUEUE_DASHBOARD_PORT}"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${QUEUE_DASHBOARD_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${QUEUE_DASHBOARD_PASSWORD}
+    volumes:
+      - queue_data:/var/lib/rabbitmq
+      - queue_logs:/var/log/rabbitmq
+      - ./devops/rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins
+    networks:
+      - app
 networks:
   app:
     driver: bridge
@@ -51,5 +65,9 @@ volumes:
   mysql_data:
     driver: local
   mvn_deps:
+    driver: local
+  queue_data:
+    driver: local
+  queue_logs:
     driver: local
   
