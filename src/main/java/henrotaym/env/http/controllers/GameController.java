@@ -1,5 +1,6 @@
 package henrotaym.env.http.controllers;
 
+import henrotaym.env.events.UserCreated;
 import henrotaym.env.http.requests.GameRequest;
 import henrotaym.env.http.resources.GameResource;
 import henrotaym.env.services.GameService;
@@ -10,6 +11,7 @@ import java.util.Set;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("games")
 public class GameController {
   private GameService gameService;
+  private final KafkaTemplate<String, UserCreated> emitter;
 
   @PostMapping("")
   public ResponseEntity<GameResource> store(@RequestBody @Valid GameRequest request) {
@@ -58,6 +61,7 @@ public class GameController {
 
   @GetMapping("")
   public ResponseEntity<List<GameResource>> index() {
+    this.emitter.send("user-created", new UserCreated("suce1q"));
     List<GameResource> games = this.gameService.index();
 
     return ResponseEntity.ok(games);
