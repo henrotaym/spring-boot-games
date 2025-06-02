@@ -16,14 +16,20 @@ public class HasIncludablesSerializer {
 
   public <T extends HasIncludables> String serialize(T element, Set<String> include)
       throws JsonProcessingException {
-    Set<String> includables = element.includables();
-    Set<String> excluded =
-        includables.stream()
-            .filter(includable -> !include.contains(includable))
-            .collect(Collectors.toSet());
+    Set<String> excluded = this.getExcluded(element.includables(), include);
     SimpleFilterProvider filterProvider = new SimpleFilterProvider();
     filterProvider.addFilter("include", SimpleBeanPropertyFilter.serializeAllExcept(excluded));
 
     return this.objectMapper.writer(filterProvider).writeValueAsString(element);
+  }
+
+  private Set<String> getExcluded(Set<String> includables, Set<String> include) {
+    if (include == null) {
+      return includables;
+    }
+
+    return includables.stream()
+        .filter(includable -> !include.contains(includable))
+        .collect(Collectors.toSet());
   }
 }
