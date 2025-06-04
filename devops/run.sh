@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-./devops/start.sh
+./devops/start.sh $@

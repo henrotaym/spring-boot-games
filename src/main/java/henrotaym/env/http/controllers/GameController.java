@@ -8,6 +8,7 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Set;
 import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("games")
 public class GameController {
   private GameService gameService;
+  private Emitter emitter;
 
   @PostMapping("")
   public ResponseEntity<GameResource> store(@RequestBody @Valid GameRequest request) {
@@ -58,6 +60,8 @@ public class GameController {
 
   @GetMapping("")
   public ResponseEntity<List<GameResource>> index() {
+    UserCreatedEvent createdEvent = new UserCreatedEvent("created");
+    this.emitter.send(createdEvent);
     List<GameResource> games = this.gameService.index();
 
     return ResponseEntity.ok(games);
