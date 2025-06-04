@@ -1,9 +1,6 @@
-server:
-  servlet:
-    context-path: /api
 spring:
   main:
-    web-application-type: servlet
+    web-application-type: none
   application:
     name: ${APP_NAME}
   datasource:

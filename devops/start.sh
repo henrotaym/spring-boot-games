@@ -1,3 +1,16 @@
 #!/usr/bin/env bash
 
-mvn spring-boot:run
+profiles="-Dspring-boot.run.profiles"
+case "$1" in
+  --queue)
+    profiles="$profiles=queue"
+    ;;
+  --scheduler)
+    profiles="$profiles=scheduler"
+    ;;
+  *)
+    profiles="$profiles=web"
+    ;;
+esac
+
+mvn spring-boot:run $profiles

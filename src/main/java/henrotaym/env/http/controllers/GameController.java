@@ -1,7 +1,10 @@
 package henrotaym.env.http.controllers;
 
+import henrotaym.env.enums.ProfileName;
 import henrotaym.env.http.requests.GameRequest;
 import henrotaym.env.http.resources.GameResource;
+import henrotaym.env.queues.emitters.Emitter;
+import henrotaym.env.queues.events.UserCreatedEvent;
 import henrotaym.env.services.GameService;
 import jakarta.validation.Valid;
 import java.math.BigInteger;
@@ -24,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 @RestController
 @RequestMapping("games")
+@Profile(ProfileName.WEB)
 public class GameController {
   private GameService gameService;
   private Emitter emitter;

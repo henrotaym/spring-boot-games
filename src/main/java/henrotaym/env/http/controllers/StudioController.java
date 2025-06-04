@@ -1,10 +1,12 @@
 package henrotaym.env.http.controllers;
 
+import henrotaym.env.enums.ProfileName;
 import henrotaym.env.http.requests.StudioRequest;
 import henrotaym.env.http.resources.StudioResource;
 import henrotaym.env.services.StudioService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 @RestController
 @RequestMapping("studios")
+@Profile(ProfileName.WEB)
 public class StudioController {
   private StudioService studioService;
 
