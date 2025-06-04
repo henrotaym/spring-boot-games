@@ -2,13 +2,14 @@ package henrotaym.env.http.controllers;
 
 import henrotaym.env.http.requests.GameRequest;
 import henrotaym.env.http.resources.GameResource;
+import henrotaym.env.queues.emitters.Emitter;
+import henrotaym.env.queues.events.UserCreatedEvent;
 import henrotaym.env.services.GameService;
 import jakarta.validation.Valid;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Set;
 import lombok.AllArgsConstructor;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,8 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("games")
 public class GameController {
-  private GameService gameService;
-  private Emitter emitter;
+  private final GameService gameService;
+  private final Emitter emitter;
 
   @PostMapping("")
   public ResponseEntity<GameResource> store(@RequestBody @Valid GameRequest request) {
