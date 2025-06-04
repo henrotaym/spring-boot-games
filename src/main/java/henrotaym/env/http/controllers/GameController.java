@@ -1,5 +1,6 @@
 package henrotaym.env.http.controllers;
 
+import henrotaym.env.enums.ProfileName;
 import henrotaym.env.http.requests.GameRequest;
 import henrotaym.env.http.resources.GameResource;
 import henrotaym.env.queues.emitters.Emitter;
@@ -10,6 +11,7 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Set;
 import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 @RestController
 @RequestMapping("games")
+@Profile(ProfileName.HTTP)
 public class GameController {
   private final GameService gameService;
   private final Emitter emitter;
