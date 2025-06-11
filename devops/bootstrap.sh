@@ -3,4 +3,5 @@
 lefthook install && \
 gitmoji --init && \
 gitmoji --update && \
-./devops/install.sh
+./devops/install.sh && \
+./devops/compile.sh
