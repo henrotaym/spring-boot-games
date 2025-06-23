@@ -3,6 +3,7 @@
     "dockerComposeFile": "../docker-compose.yml",
     "service": "app",
     "workspaceFolder": "/opt/apps/app",
+    "initializeCommand": ".devcontainer/set_env.sh",
     "customizations": {
         "vscode": {
             "extensions": [
