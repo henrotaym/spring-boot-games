@@ -38,13 +38,13 @@ ENV JAVA_HOME="/usr/local/jdk-${JDK_VERSION}"
 ENV PATH="$JAVA_HOME/bin:$PATH"
 
 # Download maven
-RUN wget --output-document=/tmp/maven.tar.gz https://downloads.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz &&\
+RUN wget --output-document=/tmp/maven.tar.gz https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz &&\
     tar --extract --verbose --file=/tmp/maven.tar.gz --directory=/usr/local && \
     rm /tmp/maven.tar.gz
 
 # Make maven binaries globally available
 ENV MAVEN_HOME="/usr/local/apache-maven-${MAVEN_VERSION}"
-ENV MAVEN_OPTS="-Dmaven.repo.local=./.m2"
+ENV MAVEN_OPTS="-Dmaven.repo.local=/opt/apps/maven/repository"
 ENV PATH="$MAVEN_HOME/bin:${PATH}"
 
 # Install google java formatter
@@ -66,6 +66,9 @@ RUN if ! getent group ${GID} > /dev/null; then \
 
 # Use host user
 USER ${UID}:${GID}
+
+# Set working directory
+WORKDIR /opt/apps/maven/repository
 
 # Set working directory
 WORKDIR /opt/apps/app
