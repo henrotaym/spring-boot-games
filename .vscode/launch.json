@@ -1,0 +1,12 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Maven Surefire Debug",
+      "request": "attach",
+      "hostName": "localhost",
+      "port": "${env:APP_DEBUG_PORT}"
+    }
+  ]
+}
