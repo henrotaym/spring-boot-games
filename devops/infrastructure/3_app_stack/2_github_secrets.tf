@@ -60,12 +60,6 @@ resource "github_actions_secret" "stack_name" {
   plaintext_value = local.full_app_name
 }
 
-resource "doppler_service_token" "app" {
-  project = doppler_project.app.id
-  config = doppler_environment.app.slug
-  name = "${local.full_app_name} stack"
-}
-
 resource "github_actions_secret" "doppler_token" {
   repository = local.github_repository_name
   secret_name = "${local.github_secret_prefix}_DOPPLER_TOKEN"

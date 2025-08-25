@@ -148,3 +148,16 @@ resource "doppler_secret" "dockerhub_username" {
   name = "DOCKERHUB_USERNAME"
   value = data.doppler_secrets.dockerhub.map.DOCKERHUB_USERNAME
 }
+
+resource "doppler_service_token" "app" {
+  project = doppler_project.app.id
+  config = doppler_environment.app.slug
+  name = "${local.full_app_name} stack"
+}
+
+resource "doppler_secret" "doppler_token" {
+  project = doppler_project.app.id
+  config = doppler_environment.app.slug
+  name = "DOPPLER_TOKEN"
+  value = doppler_service_token.app.key
+}
