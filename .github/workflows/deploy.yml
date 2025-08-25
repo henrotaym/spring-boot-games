@@ -3,7 +3,9 @@ name: "Deploy server"
 on:
   push:
     branches:
-      - "*"
+      # TODO use main instead
+      - oci_deployment
+      - staging
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -14,8 +16,41 @@ jobs:
     name: "Continuous Integration"
     runs-on: ubuntu-24.04-arm
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Set Environment Prefix
+        id: env_prefix
+        run: |
+          # TODO use main instead
+          if [[ "${{ github.ref_name }}" == "oci_deployment" ]]; then
+            echo "prefix=PRODUCTION" >> $GITHUB_OUTPUT
+          else
+            echo "prefix=STAGING" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Map secrets to outputs
+        id: vars
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets[format('{0}_DOCKERHUB_USERNAME', steps.env_prefix.outputs.prefix)] }}
+          DOPPLER_TOKEN:      ${{ secrets[format('{0}_DOPPLER_TOKEN', steps.env_prefix.outputs.prefix)] }}
+          DOCKERHUB_TOKEN:    ${{ secrets[format('{0}_DOCKERHUB_TOKEN', steps.env_prefix.outputs.prefix)] }}
+          APP_NAME:           ${{ secrets[format('{0}_APP_NAME', steps.env_prefix.outputs.prefix)] }}
+          SSH_USERNAME:       ${{ secrets[format('{0}_SSH_USERNAME', steps.env_prefix.outputs.prefix)] }}
+          SSH_PRIVATE_KEY:    ${{ secrets[format('{0}_SSH_PRIVATE_KEY', steps.env_prefix.outputs.prefix)] }}
+          PUBLIC_IP:          ${{ secrets[format('{0}_PUBLIC_IP', steps.env_prefix.outputs.prefix)] }}
+          STACK_LOCATION:     ${{ secrets[format('{0}_STACK_LOCATION', steps.env_prefix.outputs.prefix)] }}
+          STACK_NAME:         ${{ secrets[format('{0}_STACK_NAME', steps.env_prefix.outputs.prefix)] }}
+        run: |
+          echo "DOCKERHUB_USERNAME=${DOCKERHUB_USERNAME}" >> $GITHUB_OUTPUT
+          echo "DOPPLER_TOKEN=${DOPPLER_TOKEN}" >> $GITHUB_OUTPUT
+          echo "DOCKERHUB_TOKEN=${DOCKERHUB_TOKEN}" >> $GITHUB_OUTPUT
+          echo "APP_NAME=${APP_NAME}" >> $GITHUB_OUTPUT
+          echo "SSH_USERNAME=${SSH_USERNAME}" >> $GITHUB_OUTPUT
+          echo "SSH_PRIVATE_KEY=${SSH_PRIVATE_KEY}" >> $GITHUB_OUTPUT
+          echo "PUBLIC_IP=${PUBLIC_IP}" >> $GITHUB_OUTPUT
+          echo "STACK_LOCATION=${STACK_LOCATION}" >> $GITHUB_OUTPUT
+          echo "STACK_NAME=${STACK_NAME}" >> $GITHUB_OUTPUT
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
@@ -23,8 +58,8 @@ jobs:
       - name: Login to DockerHub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          username: ${{ steps.vars.outputs.DOCKERHUB_USERNAME }}
+          password: ${{ steps.vars.outputs.DOCKERHUB_TOKEN }}
       - name: Build and push http image
         uses: docker/build-push-action@v5
         with:
@@ -32,7 +67,7 @@ jobs:
           file: Dockerfile
           target: http
           push: true
-          tags: "${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.APP_NAME }}-http:${{ github.sha }}"
+          tags: "${{ steps.vars.outputs.DOCKERHUB_USERNAME }}/${{ steps.vars.outputs.APP_NAME }}-http:${{ github.sha }}"
       - name: Build and push queue image
         uses: docker/build-push-action@v5
         with:
@@ -40,7 +75,7 @@ jobs:
           file: Dockerfile
           target: queue
           push: true
-          tags: "${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.APP_NAME }}-queue:${{ github.sha }}"
+          tags: "${{ steps.vars.outputs.DOCKERHUB_USERNAME }}/${{ steps.vars.outputs.APP_NAME }}-queue:${{ github.sha }}"
       - name: Build and push scheduler image
         uses: docker/build-push-action@v5
         with:
@@ -48,32 +83,12 @@ jobs:
           file: Dockerfile
           target: scheduler
           push: true
-          tags: "${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.APP_NAME }}-scheduler:${{ github.sha }}"
-      - name: Copy Proxy stack to server
-        uses: SamKirkland/web-deploy@v1
-        with:
-          target-server: spring-boot-games-nice.henrotaym.ip-ddns.com
-          remote-user: ${{ secrets.SSH_USER }}
-          private-ssh-key: ${{ secrets.SSH_KEY }}
-          source-path: ./devops/deployment/proxy/
-          destination-path: ~/apps/proxy/
-      - name: Copy App stack to server
-        uses: SamKirkland/web-deploy@v1
-        with:
-          target-server: spring-boot-games-nice.henrotaym.ip-ddns.com
-          remote-user: ${{ secrets.SSH_USER }}
-          private-ssh-key: ${{ secrets.SSH_KEY }}
-          source-path: ./devops/deployment/app/
-          destination-path: ~/apps/${{ secrets.APP_NAME }}/
+          tags: "${{ steps.vars.outputs.DOCKERHUB_USERNAME }}/${{ steps.vars.outputs.APP_NAME }}-scheduler:${{ github.sha }}"
       - name: Configure SSH
         uses: webfactory/ssh-agent@v0.9.1
         with:
-          ssh-private-key: ${{ secrets.SSH_KEY }}
-      - name: Deploy Proxy stack
-        run: |
-          ssh-keyscan -t rsa ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "docker stack deploy -c /home/ubuntu/apps/proxy/docker-compose.yml --detach=false proxy"
-      - name: Deploy App stack
-        run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "export IMAGE_TAG=${{ github.sha }} doppler run --token=${{ secrets.DOPPLER_TOKEN }} -- docker stack deploy -c /home/ubuntu/apps/spring-boot-games/docker-compose.yml --detach=false spring-boot-games"
+          ssh-private-key: ${{ steps.vars.outputs.SSH_PRIVATE_KEY }}
+      # - name: Deploy App stack
+      #   run: |
+      #     ssh ${{ steps.vars.outputs.SSH_USERNAME }}@${{ steps.vars.outputs.PUBLIC_IP }} "export IMAGE_TAG=${{ github.sha }} doppler run --token=${{ steps.vars.outputs.DOPPLER_TOKEN }} -- docker stack deploy -c ${{ steps.vars.outputs.STACK_LOCATION }}/docker-compose.yml --detach=false ${{ steps.vars.outputs.STACK_NAME }}"
       

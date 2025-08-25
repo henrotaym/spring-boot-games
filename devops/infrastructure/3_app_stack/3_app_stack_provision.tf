@@ -1,0 +1,36 @@
+locals {
+  app_target_location = "/home/ubuntu/apps/${local.full_app_name}"
+}
+
+locals {
+  app_stack_target_location = "${local.app_target_location}/app"
+  kafka_target_location = "${local.app_target_location}/kafka"
+}
+
+resource "ssh_resource" "deploy_app_stack" {
+  triggers = {
+    always_run = "${timestamp()}"
+  }
+  host = data.doppler_secrets.server.map.PUBLIC_IP
+  user = data.doppler_secrets.server.map.SSH_USERNAME
+  private_key = data.doppler_secrets.server.map.SSH_PRIVATE_KEY
+  timeout = "15s"
+  file {
+    content = file("stacks/app/docker-compose.yml")
+    destination = "${local.app_stack_target_location}/docker-compose.yml"
+  }
+  file {
+    content = file("kafka/server.properties.custom")
+    destination = "${local.kafka_target_location}/server.properties.custom"
+  }
+  file {
+    content = file("kafka/start.sh")
+    destination = "${local.kafka_target_location}/start.sh"
+    permissions = "0755"
+  }
+  commands_after_file_changes = false
+  commands = [
+    "mkdir -p ${local.app_stack_target_location}",
+    "mkdir -p ${local.kafka_target_location}",
+  ]
+}
