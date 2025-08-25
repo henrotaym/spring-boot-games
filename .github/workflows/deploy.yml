@@ -40,6 +40,9 @@ jobs:
           echo "PUBLIC_IP=${{ secrets[format('{0}_PUBLIC_IP', steps.env_prefix.outputs.prefix)] }}" >> $GITHUB_OUTPUT
           echo "STACK_LOCATION=${{ secrets[format('{0}_STACK_LOCATION', steps.env_prefix.outputs.prefix)] }}" >> $GITHUB_OUTPUT
           echo "STACK_NAME=${{ secrets[format('{0}_STACK_NAME', steps.env_prefix.outputs.prefix)] }}" >> $GITHUB_OUTPUT
+          echo "SSH_PRIVATE_KEY<<EOF" >> $GITHUB_OUTPUT
+          echo "${{ secrets[format('{0}_SSH_PRIVATE_KEY', steps.env_prefix.outputs.prefix)] }}" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
