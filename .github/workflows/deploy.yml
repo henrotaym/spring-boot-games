@@ -80,7 +80,7 @@ jobs:
         uses: webfactory/ssh-agent@v0.9.1
         with:
           ssh-private-key: ${{ steps.vars.outputs.SSH_PRIVATE_KEY }}
-      # - name: Deploy App stack
-      #   run: |
-      #     ssh ${{ steps.vars.outputs.SSH_USERNAME }}@${{ steps.vars.outputs.PUBLIC_IP }} "export IMAGE_TAG=${{ github.sha }} doppler run --token=${{ steps.vars.outputs.DOPPLER_TOKEN }} -- docker stack deploy -c ${{ steps.vars.outputs.STACK_LOCATION }}/docker-compose.yml --detach=false ${{ steps.vars.outputs.STACK_NAME }}"
+      - name: Deploy App stack
+        run: |
+          ssh ${{ steps.vars.outputs.SSH_USERNAME }}@${{ steps.vars.outputs.PUBLIC_IP }} "export IMAGE_TAG=${{ github.sha }} doppler run --token=${{ steps.vars.outputs.DOPPLER_TOKEN }} -- docker stack deploy -c ${{ steps.vars.outputs.STACK_LOCATION }}/docker-compose.yml --detach=false ${{ steps.vars.outputs.STACK_NAME }}"
       
