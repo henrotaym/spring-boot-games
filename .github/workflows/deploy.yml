@@ -37,7 +37,7 @@ jobs:
           echo "DOCKERHUB_TOKEN=${{ secrets[format('{0}_DOCKERHUB_TOKEN', steps.env_prefix.outputs.prefix)] }}" >> $GITHUB_OUTPUT
           echo "APP_NAME=${{ secrets[format('{0}_APP_NAME', steps.env_prefix.outputs.prefix)] }}" >> $GITHUB_OUTPUT
           echo "SSH_USERNAME=${{ secrets[format('{0}_SSH_USERNAME', steps.env_prefix.outputs.prefix)] }}" >> $GITHUB_OUTPUT
-          echo "SSH_PRIVATE_KEY=${{ secrets[format('{0}_SSH_PRIVATE_KEY', steps.env_prefix.outputs.prefix)] }}" >> $GITHUB_OUTPUT
+          # echo "SSH_PRIVATE_KEY=${{ secrets[format('{0}_SSH_PRIVATE_KEY', steps.env_prefix.outputs.prefix)] }}" >> $GITHUB_OUTPUT
           echo "PUBLIC_IP=${{ secrets[format('{0}_PUBLIC_IP', steps.env_prefix.outputs.prefix)] }}" >> $GITHUB_OUTPUT
           echo "STACK_LOCATION=${{ secrets[format('{0}_STACK_LOCATION', steps.env_prefix.outputs.prefix)] }}" >> $GITHUB_OUTPUT
           echo "STACK_NAME=${{ secrets[format('{0}_STACK_NAME', steps.env_prefix.outputs.prefix)] }}" >> $GITHUB_OUTPUT
