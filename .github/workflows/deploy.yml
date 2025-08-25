@@ -52,34 +52,34 @@ jobs:
         with:
           username: ${{ steps.vars.outputs.DOCKERHUB_USERNAME }}
           password: ${{ steps.vars.outputs.DOCKERHUB_TOKEN }}
-      # - name: Build and push http image
-      #   uses: docker/build-push-action@v5
-      #   with:
-      #     context: .
-      #     file: Dockerfile
-      #     target: http
-      #     push: true
-      #     tags: "${{ steps.vars.outputs.DOCKERHUB_USERNAME }}/${{ steps.vars.outputs.APP_NAME }}-http:${{ github.sha }}"
-      # - name: Build and push queue image
-      #   uses: docker/build-push-action@v5
-      #   with:
-      #     context: .
-      #     file: Dockerfile
-      #     target: queue
-      #     push: true
-      #     tags: "${{ steps.vars.outputs.DOCKERHUB_USERNAME }}/${{ steps.vars.outputs.APP_NAME }}-queue:${{ github.sha }}"
-      # - name: Build and push scheduler image
-      #   uses: docker/build-push-action@v5
-      #   with:
-      #     context: .
-      #     file: Dockerfile
-      #     target: scheduler
-      #     push: true
-      #     tags: "${{ steps.vars.outputs.DOCKERHUB_USERNAME }}/${{ steps.vars.outputs.APP_NAME }}-scheduler:${{ github.sha }}"
-      # - name: Configure SSH
-      #   uses: webfactory/ssh-agent@v0.9.1
-      #   with:
-      #     ssh-private-key: ${{ steps.vars.outputs.SSH_PRIVATE_KEY }}
+      - name: Build and push http image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile
+          target: http
+          push: true
+          tags: "${{ steps.vars.outputs.DOCKERHUB_USERNAME }}/${{ steps.vars.outputs.APP_NAME }}-http:${{ github.sha }}"
+      - name: Build and push queue image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile
+          target: queue
+          push: true
+          tags: "${{ steps.vars.outputs.DOCKERHUB_USERNAME }}/${{ steps.vars.outputs.APP_NAME }}-queue:${{ github.sha }}"
+      - name: Build and push scheduler image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile
+          target: scheduler
+          push: true
+          tags: "${{ steps.vars.outputs.DOCKERHUB_USERNAME }}/${{ steps.vars.outputs.APP_NAME }}-scheduler:${{ github.sha }}"
+      - name: Configure SSH
+        uses: webfactory/ssh-agent@v0.9.1
+        with:
+          ssh-private-key: ${{ steps.vars.outputs.SSH_PRIVATE_KEY }}
       # - name: Deploy App stack
       #   run: |
       #     ssh ${{ steps.vars.outputs.SSH_USERNAME }}@${{ steps.vars.outputs.PUBLIC_IP }} "export IMAGE_TAG=${{ github.sha }} doppler run --token=${{ steps.vars.outputs.DOPPLER_TOKEN }} -- docker stack deploy -c ${{ steps.vars.outputs.STACK_LOCATION }}/docker-compose.yml --detach=false ${{ steps.vars.outputs.STACK_NAME }}"
