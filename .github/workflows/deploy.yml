@@ -83,4 +83,4 @@ jobs:
       - name: Deploy App stack
         run: |
           ssh-keyscan -t rsa ${{ steps.vars.outputs.PUBLIC_IP }} >> ~/.ssh/known_hosts
-          ssh ${{ steps.vars.outputs.SSH_USERNAME }}@${{ steps.vars.outputs.PUBLIC_IP }} "export IMAGE_TAG=${{ github.sha }} DOPPLER_TOKEN=${{ steps.vars.outputs.DOPPLER_TOKEN }}; doppler run -- docker stack deploy -c ${{ steps.vars.outputs.STACK_LOCATION }}/docker-compose.yml --detach=false ${{ steps.vars.outputs.STACK_NAME }}"
+          ssh ${{ steps.vars.outputs.SSH_USERNAME }}@${{ steps.vars.outputs.PUBLIC_IP }} "IMAGE_TAG=${{ github.sha }} DOPPLER_TOKEN=${{ steps.vars.outputs.DOPPLER_TOKEN }} doppler run -- docker stack deploy -c ${{ steps.vars.outputs.STACK_LOCATION }}/docker-compose.yml --detach=false ${{ steps.vars.outputs.STACK_NAME }}"
