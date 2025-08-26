@@ -3,24 +3,6 @@ locals {
   github_secret_prefix = upper(var.APP_ENVIRONMENT)
 }
 
-resource "github_actions_secret" "dockerhub_username" {
-  repository = local.github_repository_name
-  secret_name = "${local.github_secret_prefix}_DOCKERHUB_USERNAME"
-  plaintext_value = data.doppler_secrets.dockerhub.map.DOCKERHUB_USERNAME
-}
-
-resource "github_actions_secret" "dockerhub_token" {
-  repository = local.github_repository_name
-  secret_name = "${local.github_secret_prefix}_DOCKERHUB_TOKEN"
-  plaintext_value = data.doppler_secrets.dockerhub.map.DOCKERHUB_TOKEN
-}
-
-resource "github_actions_secret" "app_name" {
-  repository = local.github_repository_name
-  secret_name = "${local.github_secret_prefix}_APP_NAME"
-  plaintext_value = var.APP_NAME
-}
-
 data "doppler_secrets" "server" {
   project = "oci-${var.SERVER_NAME}"
   config = "private"
@@ -58,10 +40,4 @@ resource "github_actions_secret" "stack_name" {
   repository = local.github_repository_name
   secret_name = "${local.github_secret_prefix}_STACK_NAME"
   plaintext_value = local.full_app_name
-}
-
-resource "github_actions_secret" "doppler_token" {
-  repository = local.github_repository_name
-  secret_name = "${local.github_secret_prefix}_DOPPLER_TOKEN"
-  plaintext_value = doppler_service_token.app.key
 }

@@ -32,10 +32,10 @@ jobs:
       - name: Map secrets to outputs
         id: vars
         run: |
-          echo "DOCKERHUB_USERNAME=${{ secrets[format('{0}_DOCKERHUB_USERNAME', steps.env_prefix.outputs.prefix)] }}" >> $GITHUB_OUTPUT
+          echo "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}" >> $GITHUB_OUTPUT
+          echo "DOCKERHUB_TOKEN=${{ secrets.DOCKERHUB_TOKEN }}" >> $GITHUB_OUTPUT
+          echo "APP_NAME=${{ secrets.APP_NAME }}" >> $GITHUB_OUTPUT
           echo "DOPPLER_TOKEN=${{ secrets[format('{0}_DOPPLER_TOKEN', steps.env_prefix.outputs.prefix)] }}" >> $GITHUB_OUTPUT
-          echo "DOCKERHUB_TOKEN=${{ secrets[format('{0}_DOCKERHUB_TOKEN', steps.env_prefix.outputs.prefix)] }}" >> $GITHUB_OUTPUT
-          echo "APP_NAME=${{ secrets[format('{0}_APP_NAME', steps.env_prefix.outputs.prefix)] }}" >> $GITHUB_OUTPUT
           echo "SSH_USERNAME=${{ secrets[format('{0}_SSH_USERNAME', steps.env_prefix.outputs.prefix)] }}" >> $GITHUB_OUTPUT
           echo "PUBLIC_IP=${{ secrets[format('{0}_PUBLIC_IP', steps.env_prefix.outputs.prefix)] }}" >> $GITHUB_OUTPUT
           echo "STACK_LOCATION=${{ secrets[format('{0}_STACK_LOCATION', steps.env_prefix.outputs.prefix)] }}" >> $GITHUB_OUTPUT

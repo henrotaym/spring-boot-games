@@ -5,9 +5,9 @@ terraform {
       version = "1.18.0"
     }
 
-    ssh = {
-      source = "loafoe/ssh"
-      version = "2.7.0"
+    github = {
+      source = "integrations/github"
+      version = "6.6.0"
     }
   }
 }
@@ -25,4 +25,11 @@ provider "doppler" {
   doppler_token = data.doppler_secrets.doppler.map.DOPPLER_USER_ACCESS_TOKEN
 }
 
-provider "ssh" {}
+data "doppler_secrets" "github" {
+  project = "github"
+  config = "private"
+}
+
+provider "github" {
+  token = data.doppler_secrets.github.map.GITHUB_PERSONAL_SECRETS_ACCESS_TOKEN
+}

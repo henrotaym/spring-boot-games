@@ -18,7 +18,7 @@ terraform {
 }
 
 provider "doppler" {
-  doppler_token = var.DOPPLER_SERVICE_TOKEN
+  doppler_token = var.DOPPLER_TOKEN
   alias = "doppler"
 }
 
